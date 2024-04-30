@@ -10,7 +10,7 @@ import org.json.JSONObject
 
 object AppMeta {
     const val appName = "Symphony"
-    const val author = "Zyrouge"
+    const val author = "Lee"
     const val githubRepositoryOwner = "zyrouge"
     const val githubRepositoryName = "symphony"
     const val githubProfileUrl = "https://github.com/$githubRepositoryOwner"
@@ -36,6 +36,9 @@ object AppMeta {
         else -> fetchLatestStableVersion()
     }
 
+    /**
+     * get the latest version of the app
+     */
     fun fetchLatestStableVersion(): String? {
         try {
             val latestReleaseUrl =

@@ -22,10 +22,12 @@ enum class GrooveKinds {
 }
 
 class GrooveManager(private val symphony: Symphony) : SymphonyHooks {
+    //协程作用域
     val coroutineScope = CoroutineScope(Dispatchers.Default)
     var readyDeferred = CompletableDeferred<Boolean>()
-
+    //音乐库
     val mediaStore = MediaStoreExposer(symphony)
+    //音乐信息
     val song = SongRepository(symphony)
     val lyrics = LyricsRepository(symphony)
     val album = AlbumRepository(symphony)

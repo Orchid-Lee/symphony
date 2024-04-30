@@ -28,11 +28,17 @@ interface SymphonyHooks {
 
 class Symphony(application: Application) : AndroidViewModel(application), SymphonyHooks {
     val shorty = AndroidXShorty(this)
+
+    //权限获取
     val permission = PermissionsManager(this)
+    //设置
     val settings = SettingsManager(this)
+    //数据库缓存信息
     val database = Database(this)
+    //槽
     val groove = GrooveManager(this)
     val radio = Radio(this)
+    //本地化
     val translator = Translator(this)
 
     var t by mutableStateOf(translator.getCurrentTranslation())
@@ -70,6 +76,9 @@ class Symphony(application: Application) : AndroidViewModel(application), Sympho
         hooks.forEach { fn.invoke(it) }
     }
 
+    /**
+     * 校验版本信息
+     */
     private fun checkVersion() {
         if (!settings.checkForUpdates.value) return
         viewModelScope.launch {

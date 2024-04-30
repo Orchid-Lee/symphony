@@ -27,16 +27,19 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
 
     SymphonyTheme(context) {
         Surface(color = MaterialTheme.colorScheme.background) {
+            //路由
             NavHost(
                 navController = context.navController,
                 startDestination = Routes.Home.route,
             ) {
+                //主页
                 composable(
                     Routes.Home.template(),
                     enterTransition = { FadeTransition.enterTransition() },
                 ) {
                     HomeView(context)
                 }
+                //跳转当前播放页
                 composable(
                     Routes.NowPlaying.template(),
                     enterTransition = { SlideTransition.slideUp.enterTransition() },
@@ -46,6 +49,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) {
                     NowPlayingView(context)
                 }
+                //跳转播放队列
                 composable(
                     Routes.Queue.template(),
                     enterTransition = { SlideTransition.slideUp.enterTransition() },
@@ -53,6 +57,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) {
                     QueueView(context)
                 }
+                //跳转设置页
                 composable(
                     Routes.Settings.template(),
                     enterTransition = { ScaleTransition.scaleDown.enterTransition() },
@@ -60,6 +65,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) {
                     SettingsView(context)
                 }
+                //跳转artists
                 composable(
                     Routes.Artist.template(),
                     enterTransition = { SlideTransition.slideLeft.enterTransition() },
@@ -67,6 +73,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) { backStackEntry ->
                     ArtistView(context, backStackEntry.getRouteParameter())
                 }
+                //跳转albums专辑视图
                 composable(
                     Routes.Album.template(),
                     enterTransition = { SlideTransition.slideLeft.enterTransition() },
@@ -74,6 +81,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) { backStackEntry ->
                     AlbumView(context, backStackEntry.getRouteParameter())
                 }
+                //跳转搜索试图
                 composable(
                     Routes.Search.template(),
                     enterTransition = { SlideTransition.slideDown.enterTransition() },
@@ -86,6 +94,7 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                             ?.let { GrooveKinds.valueOf(it) }
                     )
                 }
+                //跳转artists页
                 composable(
                     Routes.AlbumArtist.template(),
                     enterTransition = { SlideTransition.slideLeft.enterTransition() },
@@ -113,6 +122,14 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                     exitTransition = { SlideTransition.slideDown.exitTransition() },
                 ) {
                     LyricsView(context)
+                }
+                //Test
+                composable(
+                    Routes.Test.template(),
+                    enterTransition = { SlideTransition.slideUp.enterTransition() },
+                    exitTransition = { SlideTransition.slideDown.exitTransition() },
+                ) {
+                    Fuck(context)
                 }
             }
         }

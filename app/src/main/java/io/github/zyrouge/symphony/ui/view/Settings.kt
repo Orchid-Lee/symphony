@@ -1,16 +1,9 @@
 package io.github.zyrouge.symphony.ui.view
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,18 +11,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.automirrored.filled.Wysiwyg
 import androidx.compose.material.icons.automirrored.outlined.Article
-import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CenterFocusWeak
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Colorize
 import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.East
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.FastRewind
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Forward30
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Headset
@@ -37,23 +25,21 @@ import androidx.compose.material.icons.filled.HeadsetOff
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowRight
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhotoSizeSelectLarge
 import androidx.compose.material.icons.filled.Recommend
 import androidx.compose.material.icons.filled.RuleFolder
+import androidx.compose.material.icons.filled.SettingsRemote
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SpaceBar
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.TextFormat
 import androidx.compose.material.icons.filled.TextIncrease
-import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -64,12 +50,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import io.github.zyrouge.symphony.services.AppMeta
 import io.github.zyrouge.symphony.services.SettingsDefaults
 import io.github.zyrouge.symphony.services.i18n.CommonTranslation
 import io.github.zyrouge.symphony.ui.components.AdaptiveSnackbar
@@ -82,7 +64,6 @@ import io.github.zyrouge.symphony.ui.theme.ThemeColors
 import io.github.zyrouge.symphony.ui.theme.ThemeMode
 import io.github.zyrouge.symphony.ui.view.home.ForYou
 import io.github.zyrouge.symphony.ui.view.settings.SettingsFloatInputTile
-import io.github.zyrouge.symphony.ui.view.settings.SettingsLinkTile
 import io.github.zyrouge.symphony.ui.view.settings.SettingsMultiFolderTile
 import io.github.zyrouge.symphony.ui.view.settings.SettingsMultiOptionTile
 import io.github.zyrouge.symphony.ui.view.settings.SettingsMultiTextOptionTile
@@ -139,6 +120,7 @@ fun SettingsView(context: ViewContext) {
     val showUpdateToast by context.symphony.settings.showUpdateToast.collectAsState()
     val fontScale by context.symphony.settings.fontScale.collectAsState()
     val contentScale by context.symphony.settings.contentScale.collectAsState()
+    val subsonicApi by context.symphony.settings.subsonicApi.collectAsState()
 
     val refetchLibrary = {
         context.symphony.radio.stop()
@@ -185,54 +167,6 @@ fun SettingsView(context: ViewContext) {
                     .fillMaxSize()
             ) {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    val contentColor = MaterialTheme.colorScheme.onPrimary
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .clickable {
-                                context.symphony.shorty.startBrowserActivity(
-                                    context.activity,
-                                    AppMeta.contributingUrl,
-                                )
-                            }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(24.dp, 8.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                Icons.Filled.Favorite,
-                                null,
-                                tint = contentColor,
-                                modifier = Modifier.size(12.dp),
-                            )
-                            Box(modifier = Modifier.width(4.dp))
-                            Text(
-                                context.symphony.t.ConsiderContributing,
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = contentColor,
-                                ),
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .padding(8.dp, 0.dp)
-                        ) {
-                            Icon(
-                                Icons.Filled.East,
-                                null,
-                                tint = contentColor,
-                                modifier = Modifier.size(20.dp),
-                            )
-                        }
-                    }
                     SettingsSideHeading(context.symphony.t.Appearance)
                     SettingsOptionTile(
                         icon = {
@@ -398,6 +332,20 @@ fun SettingsView(context: ViewContext) {
                         },
                         title = {
                             Text(context.symphony.t.BottomBarLabelVisibility)
+                        },
+                        value = homePageBottomBarLabelVisibility,
+                        values = HomePageBottomBarLabelVisibility.entries
+                            .associateWith { it.label(context) },
+                        onChange = { value ->
+                            context.symphony.settings.setHomePageBottomBarLabelVisibility(value)
+                        }
+                    )
+                    SettingsOptionTile(
+                        icon = {
+                            Icon(Icons.Filled.SettingsRemote, null)
+                        },
+                        title = {
+                            Text("hello")
                         },
                         value = homePageBottomBarLabelVisibility,
                         values = HomePageBottomBarLabelVisibility.entries
@@ -582,6 +530,7 @@ fun SettingsView(context: ViewContext) {
                             context.symphony.settings.setMiniPlayerTextMarquee(value)
                         }
                     )
+                    //Now Playing
                     HorizontalDivider()
                     SettingsSideHeading(context.symphony.t.NowPlaying)
                     SettingsOptionTile(
@@ -598,6 +547,7 @@ fun SettingsView(context: ViewContext) {
                             context.symphony.settings.setNowPlayingControlsLayout(value)
                         }
                     )
+                    //Lyrics layout
                     SettingsOptionTile(
                         icon = {
                             Icon(Icons.AutoMirrored.Outlined.Article, null)
@@ -612,6 +562,7 @@ fun SettingsView(context: ViewContext) {
                             context.symphony.settings.setNowPlayingLyricsLayout(value)
                         }
                     )
+                    //Show audio information
                     SettingsSwitchTile(
                         icon = {
                             Icon(Icons.AutoMirrored.Filled.Wysiwyg, null)
@@ -624,6 +575,7 @@ fun SettingsView(context: ViewContext) {
                             context.symphony.settings.showNowPlayingAdditionalInfo(value)
                         }
                     )
+                    //Show seek controls
                     SettingsSwitchTile(
                         icon = {
                             Icon(Icons.Filled.Forward30, null)
@@ -636,6 +588,7 @@ fun SettingsView(context: ViewContext) {
                             context.symphony.settings.setNowPlayingSeekControls(value)
                         }
                     )
+                    //Groove
                     HorizontalDivider()
                     SettingsSideHeading(context.symphony.t.Groove)
                     val defaultSongsFilterPattern = ".*"
@@ -737,117 +690,119 @@ fun SettingsView(context: ViewContext) {
                             }
                         }
                     )
-                    HorizontalDivider()
-                    SettingsSideHeading(context.symphony.t.Updates)
-                    SettingsSwitchTile(
-                        icon = {
-                            Icon(Icons.Filled.Update, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.CheckForUpdates)
-                        },
-                        value = checkForUpdates,
-                        onChange = { value ->
-                            context.symphony.settings.setCheckForUpdates(value)
-                        }
-                    )
-                    SettingsSwitchTile(
-                        icon = {
-                            Icon(Icons.Filled.Update, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.ShowUpdateToast)
-                        },
-                        value = showUpdateToast,
-                        onChange = { value ->
-                            context.symphony.settings.setShowUpdateToast(value)
-                        }
-                    )
-                    HorizontalDivider()
-                    SettingsSideHeading(context.symphony.t.Help)
-                    SettingsLinkTile(
-                        context,
-                        icon = {
-                            Icon(Icons.Filled.BugReport, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.ReportAnIssue)
-                        },
-                        url = AppMeta.githubIssuesUrl
-                    )
-                    SettingsLinkTile(
-                        context,
-                        icon = {
-                            Icon(Icons.Filled.Forum, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.Discord)
-                        },
-                        url = AppMeta.discordUrl
-                    )
-                    SettingsLinkTile(
-                        context,
-                        icon = {
-                            Icon(Icons.Filled.Forum, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.Reddit)
-                        },
-                        url = AppMeta.redditUrl
-                    )
-                    HorizontalDivider()
-                    SettingsSideHeading(context.symphony.t.About)
-                    val isLatestVersion = AppMeta.latestVersion
-                        ?.let { it == AppMeta.version }
-                        ?: true
-                    SettingsSimpleTile(
-                        icon = {
-                            Icon(Icons.Filled.MusicNote, null)
-                        },
-                        title = {
-                            Text("${AppMeta.appName} ${AppMeta.version}")
-                        },
-                        subtitle = when {
-                            !isLatestVersion -> ({
-                                Text(context.symphony.t.NewVersionAvailableX(AppMeta.latestVersion!!))
-                            })
-
-                            else -> null
-                        },
-                        onClick = {
-                            context.symphony.shorty.startBrowserActivity(
-                                context.activity,
-                                when {
-                                    isLatestVersion -> AppMeta.githubRepositoryUrl
-                                    else -> AppMeta.githubLatestReleaseUrl
-                                }
-                            )
-                        }
-                    )
-                    SettingsLinkTile(
-                        context,
-                        icon = {
-                            Icon(
-                                Icons.Filled.Favorite,
-                                null,
-                                tint = Color.Red,
-                            )
-                        },
-                        title = {
-                            Text(context.symphony.t.MadeByX(AppMeta.author))
-                        },
-                        url = AppMeta.githubProfileUrl
-                    )
-                    SettingsLinkTile(
-                        context,
-                        icon = {
-                            Icon(Icons.Filled.Code, null)
-                        },
-                        title = {
-                            Text(context.symphony.t.Github)
-                        },
-                        url = AppMeta.githubRepositoryUrl
-                    )
+                    //Updates
+//                    HorizontalDivider()
+//                    SettingsSideHeading(context.symphony.t.Updates)
+//                    SettingsSwitchTile(
+//                        icon = {
+//                            Icon(Icons.Filled.Update, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.CheckForUpdates)
+//                        },
+//                        value = checkForUpdates,
+//                        onChange = { value ->
+//                            context.symphony.settings.setCheckForUpdates(value)
+//                        }
+//                    )
+//                    SettingsSwitchTile(
+//                        icon = {
+//                            Icon(Icons.Filled.Update, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.ShowUpdateToast)
+//                        },
+//                        value = showUpdateToast,
+//                        onChange = { value ->
+//                            context.symphony.settings.setShowUpdateToast(value)
+//                        }
+//                    )
+                    //Help
+//                    HorizontalDivider()
+//                    SettingsSideHeading(context.symphony.t.Help)
+//                    SettingsLinkTile(
+//                        context,
+//                        icon = {
+//                            Icon(Icons.Filled.BugReport, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.ReportAnIssue)
+//                        },
+//                        url = AppMeta.githubIssuesUrl
+//                    )
+//                    SettingsLinkTile(
+//                        context,
+//                        icon = {
+//                            Icon(Icons.Filled.Forum, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.Discord)
+//                        },
+//                        url = AppMeta.discordUrl
+//                    )
+//                    SettingsLinkTile(
+//                        context,
+//                        icon = {
+//                            Icon(Icons.Filled.Forum, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.Reddit)
+//                        },
+//                        url = AppMeta.redditUrl
+//                    )
+//                    HorizontalDivider()
+//                    SettingsSideHeading(context.symphony.t.About)
+//                    val isLatestVersion = AppMeta.latestVersion
+//                        ?.let { it == AppMeta.version }
+//                        ?: true
+//                    SettingsSimpleTile(
+//                        icon = {
+//                            Icon(Icons.Filled.MusicNote, null)
+//                        },
+//                        title = {
+//                            Text("${AppMeta.appName} ${AppMeta.version}")
+//                        },
+//                        subtitle = when {
+//                            !isLatestVersion -> ({
+//                                Text(context.symphony.t.NewVersionAvailableX(AppMeta.latestVersion!!))
+//                            })
+//
+//                            else -> null
+//                        },
+//                        onClick = {
+//                            context.symphony.shorty.startBrowserActivity(
+//                                context.activity,
+//                                when {
+//                                    isLatestVersion -> AppMeta.githubRepositoryUrl
+//                                    else -> AppMeta.githubLatestReleaseUrl
+//                                }
+//                            )
+//                        }
+//                    )
+//                    SettingsLinkTile(
+//                        context,
+//                        icon = {
+//                            Icon(
+//                                Icons.Filled.Favorite,
+//                                null,
+//                                tint = Color.Red,
+//                            )
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.MadeByX(AppMeta.author))
+//                        },
+//                        url = AppMeta.githubProfileUrl
+//                    )
+//                    SettingsLinkTile(
+//                        context,
+//                        icon = {
+//                            Icon(Icons.Filled.Code, null)
+//                        },
+//                        title = {
+//                            Text(context.symphony.t.Github)
+//                        },
+//                        url = AppMeta.githubRepositoryUrl
+//                    )
                 }
             }
         }

@@ -69,6 +69,10 @@ class SongCache(val symphony: Symphony) {
             .toFile()
     )
 
+    /**
+     * 读取歌曲缓存信息
+     * /data/user/0/io.github.zyrouge.symphony.debug/cache/song_cache.json
+     */
     fun read(): Map<Long, Attributes> {
         val content = adapter.read()
         val output = mutableMapOf<Long, Attributes>()

@@ -47,6 +47,9 @@ data class Song(
                     .toFloat()
             }
 
+        /**
+         * 采样率转换
+         */
         fun toSamplingInfoString(symphony: Symphony): String? {
             val values = mutableListOf<String>()
             codec?.let { values.add(it) }
@@ -136,8 +139,17 @@ data class Song(
     val filename = Path(path).fileName.toString()
     val uri: Uri get() = buildUri(id)
 
+    //异步请求图片
     fun createArtworkImageRequest(symphony: Symphony) =
         symphony.groove.song.createArtworkImageRequest(id)
+
+
+    fun getImageByUrl(symphony: Symphony) {
+
+    }
+
+    fun createTest(symphony: Symphony) =
+        symphony.groove.song.getImageByUrl(id)
 
     companion object {
         fun buildUri(id: Long) = ContentUris.withAppendedId(

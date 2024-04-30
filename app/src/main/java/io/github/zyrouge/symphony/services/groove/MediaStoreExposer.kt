@@ -26,9 +26,13 @@ class MediaStoreExposer(private val symphony: Symphony) {
         symphony.groove.onMediaStoreUpdate(value)
     }
 
+    /**
+     * 获取音乐数据
+     */
     fun fetch() {
         emitUpdate(true)
         try {
+            //content://media/external/audio/media
             val cursor = symphony.applicationContext.contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projectedColumns.toTypedArray(),
@@ -87,6 +91,13 @@ class MediaStoreExposer(private val symphony: Symphony) {
         }
         emitUpdate(false)
         emitFinish()
+    }
+
+    /**
+     * 调用接口获取
+     */
+    fun fetchOnline() {
+
     }
 
     fun reset() {

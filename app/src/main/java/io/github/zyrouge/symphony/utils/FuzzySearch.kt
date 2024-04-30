@@ -26,6 +26,9 @@ data class FuzzyResultEntity<T>(
     val entity: T,
 )
 
+/**
+ * 模糊搜索
+ */
 class FuzzySearcher<T>(val options: List<FuzzySearchOption<T>>) {
     fun search(
         terms: String,

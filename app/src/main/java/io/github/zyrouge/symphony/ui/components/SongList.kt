@@ -28,6 +28,7 @@ enum class SongListType {
     Album,
 }
 
+//歌曲列表
 @Composable
 fun SongList(
     context: ViewContext,

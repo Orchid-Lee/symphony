@@ -4,7 +4,7 @@ import java.io.File
 
 class FileDatabaseAdapter(val file: File) {
     fun overwrite(content: String) = overwrite(content.toByteArray())
-    fun overwrite(bytes: ByteArray) {
+    private fun overwrite(bytes: ByteArray) {
         file.outputStream().use { it.write(bytes) }
     }
 

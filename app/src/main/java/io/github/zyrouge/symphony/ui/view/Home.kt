@@ -1,5 +1,6 @@
 package io.github.zyrouge.symphony.ui.view
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.togetherWith
@@ -29,8 +30,10 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.material.icons.filled.Tune
@@ -168,6 +171,7 @@ enum class HomePageBottomBarLabelVisibility {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(context: ViewContext) {
+    //协程作用域
     val coroutineScope = rememberCoroutineScope()
     val readIntroductoryMessage by context.symphony.settings.readIntroductoryMessage.collectAsState()
     val tabs by context.symphony.settings.homeTabs.collectAsState()
@@ -179,6 +183,7 @@ fun HomeView(context: ViewContext) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
+            //顶部工具栏
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Transparent
@@ -189,6 +194,7 @@ fun HomeView(context: ViewContext) {
                             Icon(Icons.Filled.Search, null)
                         },
                         onClick = {
+                            //跳转搜索页
                             context.navController.navigate(Routes.Search.build(currentTab.kind))
                         }
                     )
@@ -206,6 +212,7 @@ fun HomeView(context: ViewContext) {
                         }
                     }
                 },
+                //右上角三个竖向点点
                 actions = {
                     IconButton(
                         content = {
@@ -214,7 +221,9 @@ fun HomeView(context: ViewContext) {
                                 expanded = showOptionsDropdown,
                                 onDismissRequest = { showOptionsDropdown = false },
                             ) {
+                                //下拉选项
                                 DropdownMenuItem(
+                                    //重新扫描
                                     leadingIcon = {
                                         Icon(
                                             Icons.Filled.Refresh,
@@ -225,6 +234,7 @@ fun HomeView(context: ViewContext) {
                                         Text(context.symphony.t.Rescan)
                                     },
                                     onClick = {
+                                        //点击后关闭下拉选项
                                         showOptionsDropdown = false
                                         context.symphony.radio.stop()
                                         coroutineScope.launch {
@@ -232,6 +242,7 @@ fun HomeView(context: ViewContext) {
                                         }
                                     }
                                 )
+                                //下拉选项
                                 DropdownMenuItem(
                                     leadingIcon = {
                                         Icon(
@@ -247,6 +258,22 @@ fun HomeView(context: ViewContext) {
                                         context.navController.navigate(Routes.Settings)
                                     }
                                 )
+                                //下拉选项
+                                DropdownMenuItem(
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Filled.NetworkCheck,
+                                            context.symphony.t.Fuck,
+                                        )
+                                    },
+                                    text = {
+                                        Text(context.symphony.t.Fuck)
+                                    },
+                                    onClick = {
+                                        showOptionsDropdown = false
+                                        context.navController.navigate(Routes.Test)
+                                    }
+                                )
                             }
                         },
                         onClick = {
@@ -256,6 +283,7 @@ fun HomeView(context: ViewContext) {
                 }
             )
         },
+        //中间Pager
         content = { contentPadding ->
             AnimatedContent(
                 label = "home-content",
@@ -275,6 +303,7 @@ fun HomeView(context: ViewContext) {
                     HomePages.Artists -> ArtistsView(context)
                     HomePages.AlbumArtists -> AlbumArtistsView(context)
                     HomePages.Genres -> GenresView(context)
+                    //文件浏览
                     HomePages.Browser -> BrowserView(context)
                     HomePages.Folders -> FoldersView(context)
                     HomePages.Playlists -> PlaylistsView(context)
@@ -284,7 +313,9 @@ fun HomeView(context: ViewContext) {
         },
         bottomBar = {
             Column {
+                //正在播放底栏
                 NowPlayingBottomBar(context, false)
+                //底部导航按钮
                 NavigationBar(
                     modifier = Modifier
                         .pointerInput(Unit) {
@@ -297,6 +328,7 @@ fun HomeView(context: ViewContext) {
                         })
                 ) {
                     Spacer(modifier = Modifier.width(2.dp))
+                    Log.d("Lee", "HomeView: $tabs")
                     tabs.map { x ->
                         val isSelected = currentTab == x
                         val label = x.label(context)

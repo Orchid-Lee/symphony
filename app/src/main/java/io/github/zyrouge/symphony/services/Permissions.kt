@@ -24,9 +24,11 @@ class PermissionsManager(private val symphony: Symphony) {
     val onUpdate = Eventer<PermissionEvents>()
 
     fun handle(activity: MainActivity) {
+        //获取权限状态
         val state = getState(activity)
         if (state.hasAll()) return
         activity.registerForActivityResult(
+            //请求权限
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             if (permissions.count { it.value } > 0) {
@@ -35,7 +37,11 @@ class PermissionsManager(private val symphony: Symphony) {
         }.launch(state.denied.toTypedArray())
     }
 
+    /**
+     * gian required permissions
+     */
     private fun getRequiredPermissions(): List<String> {
+        //读取外部存储
         val required = mutableListOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             required.add(Manifest.permission.READ_MEDIA_AUDIO)
@@ -44,9 +50,15 @@ class PermissionsManager(private val symphony: Symphony) {
         return required
     }
 
+    /**
+     * 校验权限
+     */
     private fun getState(activity: MainActivity): PermissionsState {
+        //需要
         val required = getRequiredPermissions()
+        //授权
         val granted = mutableListOf<String>()
+        //拒绝
         val denied = mutableListOf<String>()
         required.forEach {
             if (activity.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED) {

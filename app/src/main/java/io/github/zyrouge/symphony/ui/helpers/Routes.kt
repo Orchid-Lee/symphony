@@ -41,6 +41,7 @@ data object Routes {
     val Genre = Route.StringParameterized("genre")
     val Playlist = Route.StringParameterized("playlist")
     val Lyrics = Route.Simple("lyrics")
+    val Test = Route.Simple("test")
 }
 
 fun NavHostController.navigate(route: Route.Simple) = navigate(route.route)

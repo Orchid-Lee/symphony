@@ -34,8 +34,9 @@ class MainActivity : ComponentActivity() {
             ErrorActivity.start(this, err)
             finish()
         }
-
+        //viewModel
         val symphony: Symphony by viewModels()
+        //校验权限信息
         symphony.permission.handle(this)
         gSymphony = symphony
         symphony.ready()
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     ignition.toReady()
                 }
             }
-
+            //基础视图
             BaseView(symphony = symphony, activity = this)
         }
     }

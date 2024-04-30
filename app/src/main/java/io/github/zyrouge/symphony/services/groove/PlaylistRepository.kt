@@ -56,6 +56,7 @@ class PlaylistRepository(private val symphony: Symphony) {
         cache.size
     }
 
+    //获取播放列表信息
     fun fetch() {
         emitUpdate(true)
         try {

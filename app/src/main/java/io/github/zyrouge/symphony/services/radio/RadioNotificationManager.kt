@@ -81,6 +81,7 @@ class RadioNotificationManager(val symphony: Symphony) {
         manager.cancel(RadioNotification.CHANNEL_ID, RadioNotification.NOTIFICATION_ID)
     }
 
+    //创建服务
     private fun createService() {
         if (hasService || state == State.PREPARING) return
         val intent = Intent(symphony.applicationContext, RadioNotificationService::class.java)

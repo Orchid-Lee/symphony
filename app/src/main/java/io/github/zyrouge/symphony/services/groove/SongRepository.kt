@@ -109,6 +109,9 @@ class SongRepository(private val symphony: Symphony) {
     fun get(id: Long) = cache[id]
     fun get(ids: List<Long>) = ids.mapNotNull { get(it) }
 
+    /**
+     * 获取文件资源URI
+     */
     fun getArtworkUri(songId: Long): Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         .buildUpon()
         .run {
@@ -117,11 +120,21 @@ class SongRepository(private val symphony: Symphony) {
             build()
         }
 
+    fun getImage(songId: Long): String {
+        return "https://pbs.twimg.com/media/EXjZV6_U4AA8hgx.jpg"
+    }
+
     fun getDefaultArtworkUri() = Assets.getPlaceholderUri(symphony)
 
     fun createArtworkImageRequest(songId: Long) = createHandyImageRequest(
         symphony.applicationContext,
         image = getArtworkUri(songId),
+        fallback = Assets.getPlaceholderId(symphony),
+    )
+
+    fun getImageByUrl(songId: Long) = createHandyImageRequest(
+        symphony.applicationContext,
+        image = getImage(songId),
         fallback = Assets.getPlaceholderId(symphony),
     )
 }

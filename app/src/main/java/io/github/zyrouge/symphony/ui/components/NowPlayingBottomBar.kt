@@ -105,6 +105,7 @@ fun NowPlayingBottomBar(context: ViewContext, drawInset: Boolean = true) {
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp))
             ) {
+                //播放进度条
                 Box(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.primary.copy(0.3f))
@@ -119,6 +120,7 @@ fun NowPlayingBottomBar(context: ViewContext, drawInset: Boolean = true) {
                             .fillMaxWidth(playbackPosition.ratio)
                     )
                 }
+                //正在播放组件
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -128,11 +130,13 @@ fun NowPlayingBottomBar(context: ViewContext, drawInset: Boolean = true) {
                                 context.navController.navigate(Routes.NowPlaying)
                             },
                             onSwipeDown = {
+                                //停止播放
                                 context.symphony.radio.stop()
                             },
                         ),
                     shape = RectangleShape,
                     onClick = {
+                        //正在播放点击
                         context.navController.navigate(Routes.NowPlaying)
                     }
                 ) {
@@ -152,15 +156,25 @@ fun NowPlayingBottomBar(context: ViewContext, drawInset: Boolean = true) {
                                 from togetherWith to
                             },
                         ) { song ->
+                            //图片展示
                             AsyncImage(
-                                song.createArtworkImageRequest(context.symphony).build(),
+                                model = song.createTest(context.symphony).build().data,
                                 null,
                                 modifier = Modifier
                                     .size(45.dp)
                                     .clip(RoundedCornerShape(10.dp))
                             )
+
+//                            AsyncImage(
+//                                song.createArtworkImageRequest(context.symphony).build(),
+//                                null,
+//                                modifier = Modifier
+//                                    .size(45.dp)
+//                                    .clip(RoundedCornerShape(10.dp))
+//                            )
                         }
                         Spacer(modifier = Modifier.width(15.dp))
+                        //音乐标题信息
                         AnimatedContent(
                             label = "c-now-playing-card-content",
                             modifier = Modifier.weight(1f),
@@ -176,7 +190,8 @@ fun NowPlayingBottomBar(context: ViewContext, drawInset: Boolean = true) {
                                 from togetherWith to
                             },
                         ) { song ->
-                            NowPlayingBottomBarContent(context, song = song)
+//                            NowPlayingBottomBarContent(context, song = song)
+                            Text(text = "Debug:${song.title}")
                         }
                         Spacer(modifier = Modifier.width(15.dp))
                         if (showTrackControls) {
@@ -300,6 +315,10 @@ private fun NowPlayingBottomBarContent(context: ViewContext, song: Song) {
     }
 }
 
+/**
+ * @param text 歌曲信息 Today Was a Fairytale-Taylor Swift
+ * <unknown>
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NowPlayingBottomBarContentText(
@@ -309,7 +328,8 @@ private fun NowPlayingBottomBarContentText(
 ) {
     val textMarquee by context.symphony.settings.miniPlayerTextMarquee.collectAsState()
     var showOverlay by remember { mutableStateOf(false) }
-
+//    Log.d("FUCK", "NowPlayingBottomBarContentText:" + text)
+    //显示当前播放的内容 歌曲信息
     Box {
         Text(
             text,

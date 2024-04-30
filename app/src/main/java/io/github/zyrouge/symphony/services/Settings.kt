@@ -56,6 +56,7 @@ object SettingsKeys {
     const val homeLastTab = "home_last_page"
     const val songsFilterPattern = "songs_filter_pattern"
     const val checkForUpdates = "check_for_updates"
+    const val subsonicApi = "subsonic_api"
     const val fadePlayback = "fade_playback"
     const val requireAudioFocus = "require_audio_focus"
     const val ignoreAudioFocusLoss = "ignore_audio_focus_loss"
@@ -101,6 +102,7 @@ object SettingsDefaults {
     val lastUsedTreePathSortBy = PathSortBy.NAME
     val lastUsedFoldersSortBy = PathSortBy.NAME
     const val checkForUpdates = false
+    const val subsonicApi = false
     const val fadePlayback = false
     const val requireAudioFocus = true
     const val ignoreAudioFocusLoss = false
@@ -236,6 +238,9 @@ class SettingsManager(private val symphony: Symphony) {
 
     private val _checkForUpdates = MutableStateFlow(getCheckForUpdates())
     val checkForUpdates = _checkForUpdates.asStateFlow()
+
+    private val _subsonicApi = MutableStateFlow(getSubsonicApi())
+    val subsonicApi = _subsonicApi.asStateFlow()
 
     private val _fadePlayback = MutableStateFlow(getFadePlayback())
     val fadePlayback = _fadePlayback.asStateFlow()
@@ -641,6 +646,12 @@ class SettingsManager(private val symphony: Symphony) {
         SettingsKeys.checkForUpdates,
         SettingsDefaults.checkForUpdates,
     )
+
+    fun getSubsonicApi() = getSharedPreferences().getBoolean(
+        SettingsKeys.subsonicApi,
+        SettingsDefaults.subsonicApi,
+    )
+
 
     fun setCheckForUpdates(value: Boolean) {
         getSharedPreferences().edit {

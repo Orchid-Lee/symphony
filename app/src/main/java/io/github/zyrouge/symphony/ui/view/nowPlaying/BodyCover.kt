@@ -1,5 +1,6 @@
 package io.github.zyrouge.symphony.ui.view.nowPlaying
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
@@ -41,7 +42,7 @@ fun NowPlayingBodyCover(
     orientation: ScreenOrientation,
 ) {
     val showLyrics by states.showLyrics.collectAsState()
-
+    //当前播放歌曲信息
     data.run {
         Box(modifier = Modifier.padding(defaultHorizontalPadding, 0.dp)) {
             AnimatedContent(
@@ -53,6 +54,7 @@ fun NowPlayingBodyCover(
                         .togetherWith(FadeTransition.exitTransition())
                 },
             ) { targetStateShowLyrics ->
+//                Log.d("Lee", "NowPlayingBodyCover:$targetStateShowLyrics")
                 when {
                     targetStateShowLyrics -> Box(
                         modifier = Modifier
@@ -88,10 +90,11 @@ fun NowPlayingBodyCover(
                                     .togetherWith(FadeTransition.exitTransition())
                             },
                         ) { targetStateSong ->
+                            //播放主界面
                             AsyncImage(
-                                targetStateSong
-                                    .createArtworkImageRequest(context.symphony)
-                                    .build(),
+                                model = targetStateSong
+                                    .createTest(context.symphony)
+                                    .build().data,
                                 null,
                                 contentScale = ContentScale.Crop,
                                 filterQuality = FilterQuality.High,
@@ -114,6 +117,7 @@ fun NowPlayingBodyCover(
                                     .pointerInput(Unit) {
                                         detectTapGestures { _ ->
                                             song.album?.let {
+                                                //跳转专辑信息
                                                 context.navController.navigate(Routes.Album.build(it))
                                             }
                                         }

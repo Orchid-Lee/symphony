@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.app)
     alias(libs.plugins.android.kotlin)
+    id("kotlin-parcelize")
+    id("androidx.room")
 }
 
 android {
@@ -8,6 +10,7 @@ android {
     compileSdk = libs.versions.compile.sdk.get().toInt()
 
     defaultConfig {
+        //唯一標識
         applicationId = "io.github.zyrouge.symphony"
         minSdk = libs.versions.min.sdk.get().toInt()
         targetSdk = libs.versions.target.sdk.get().toInt()
@@ -64,6 +67,10 @@ android {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -80,7 +87,18 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
-
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.room.runtime)
+    // Kotlin
+    implementation(libs.preference.ktx)
+    annotationProcessor(libs.room.compiler)
     debugImplementation(libs.compose.ui.test.manifest)
+    //
+    debugImplementation(libs.library)
+    releaseImplementation(libs.library.no.op)
+    testImplementation(libs.junit)
 }
