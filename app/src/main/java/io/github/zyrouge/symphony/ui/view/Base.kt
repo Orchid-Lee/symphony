@@ -16,21 +16,29 @@ import io.github.zyrouge.symphony.ui.helpers.SlideTransition
 import io.github.zyrouge.symphony.ui.helpers.ViewContext
 import io.github.zyrouge.symphony.ui.helpers.getRouteParameter
 import io.github.zyrouge.symphony.ui.theme.SymphonyTheme
+import io.github.zyrouge.symphony.utils.Preferences
 
+/**
+ * This Kotlin code defines a composable function called BaseView that sets up the navigation structure for an Android application. It uses the Jetpack Compose library to create the UI and the NavHost component to handle navigation between different screens.
+ */
 @Composable
 fun BaseView(symphony: Symphony, activity: MainActivity) {
     val context = ViewContext(
         symphony = symphony,
         activity = activity,
+        //navController is used to navigate between different screens.
         navController = rememberNavController(),
     )
 
     SymphonyTheme(context) {
         Surface(color = MaterialTheme.colorScheme.background) {
-            //路由
+            /**
+             * It uses the NavHost component to define the navigation routes for the application.
+             * The startDestination is set to Routes.Home.route, which means that the Home screen is displayed when the application is launched.
+             */
             NavHost(
                 navController = context.navController,
-                startDestination = Routes.Home.route,
+                startDestination = Routes.Login.route,
             ) {
                 //主页
                 composable(
@@ -123,13 +131,13 @@ fun BaseView(symphony: Symphony, activity: MainActivity) {
                 ) {
                     LyricsView(context)
                 }
-                //Test
+                //Login
                 composable(
-                    Routes.Test.template(),
+                    Routes.Login.template(),
                     enterTransition = { SlideTransition.slideUp.enterTransition() },
                     exitTransition = { SlideTransition.slideDown.exitTransition() },
                 ) {
-                    Fuck(context)
+                    LoginView(context)
                 }
             }
         }

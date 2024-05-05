@@ -110,11 +110,11 @@ object SettingsDefaults {
     const val pauseOnHeadphonesDisconnect = true
     const val fadePlaybackDuration = 1f
     val homeTabs = setOf(
-        HomePages.ForYou,
+//        HomePages.ForYou,
         HomePages.Songs,
-        HomePages.Albums,
-        HomePages.Artists,
-        HomePages.Playlists,
+//        HomePages.Albums,
+//        HomePages.Artists,
+//        HomePages.Playlists,
     )
     val homePageBottomBarLabelVisibility = HomePageBottomBarLabelVisibility.ALWAYS_VISIBLE
     val forYouContents = setOf(

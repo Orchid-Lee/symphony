@@ -14,6 +14,7 @@ import io.github.zyrouge.symphony.services.SettingsManager
 import io.github.zyrouge.symphony.services.database.Database
 import io.github.zyrouge.symphony.services.groove.GrooveManager
 import io.github.zyrouge.symphony.services.i18n.Translator
+import io.github.zyrouge.symphony.services.login.Login
 import io.github.zyrouge.symphony.services.radio.Radio
 import io.github.zyrouge.symphony.utils.AndroidXShorty
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,6 @@ interface SymphonyHooks {
 
 class Symphony(application: Application) : AndroidViewModel(application), SymphonyHooks {
     val shorty = AndroidXShorty(this)
-
     //权限获取
     val permission = PermissionsManager(this)
     //设置

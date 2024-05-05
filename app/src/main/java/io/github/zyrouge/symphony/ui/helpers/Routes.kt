@@ -28,6 +28,7 @@ abstract class Route(val route: String) {
 }
 
 data object Routes {
+
     val Home = Route.Simple("home")
     val NowPlaying = Route.Simple("now_playing")
     val Queue = Route.Simple("queue")
@@ -41,7 +42,7 @@ data object Routes {
     val Genre = Route.StringParameterized("genre")
     val Playlist = Route.StringParameterized("playlist")
     val Lyrics = Route.Simple("lyrics")
-    val Test = Route.Simple("test")
+    val Login = Route.Simple("login")
 }
 
 fun NavHostController.navigate(route: Route.Simple) = navigate(route.route)

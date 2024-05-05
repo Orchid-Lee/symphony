@@ -2,7 +2,11 @@ package io.github.zyrouge.symphony.services.groove
 
 import android.net.Uri
 import android.provider.MediaStore
+import androidx.lifecycle.MutableLiveData
+import com.cappielloantonio.tempo.subsonic.base.ApiResponse
+import io.github.zyrouge.symphony.App
 import io.github.zyrouge.symphony.Symphony
+import io.github.zyrouge.symphony.services.subsonic.models.Child
 import io.github.zyrouge.symphony.ui.helpers.Assets
 import io.github.zyrouge.symphony.ui.helpers.createHandyImageRequest
 import io.github.zyrouge.symphony.utils.FuzzySearchOption
@@ -11,7 +15,11 @@ import io.github.zyrouge.symphony.utils.joinToStringIfNotEmpty
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.min
 
 enum class SongSortBy {
     CUSTOM,
@@ -137,4 +145,220 @@ class SongRepository(private val symphony: Symphony) {
         image = getImage(songId),
         fallback = Assets.getPlaceholderId(symphony),
     )
+
+    fun getStarredSongs(random: Boolean, size: Int): List<Child?> {
+        val starredSongs: List<Child> = mutableListOf()
+
+        App.getSubsonicClientInstance(false)
+            .getAlbumSongListClient()
+            .getStarred2()
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.starred2 != null) {
+                        val songs =
+                            response.body()!!.subsonicResponse.starred2!!.songs?.toMutableList()
+                        if (songs != null) {
+                            if (!random) {
+                                starredSongs.plus(songs)
+                            } else {
+                                songs.shuffle()
+                                starredSongs.plus(
+                                    songs.subList(
+                                        0,
+                                        min(size.toDouble(), songs.size.toDouble()).toInt()
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+        return starredSongs
+    }
+
+
+    fun getInstantMix(song: Child, count: Int): MutableLiveData<List<Child>?> {
+        val instantMix = MutableLiveData<List<Child>?>()
+
+        App.getSubsonicClientInstance(false)
+            .browsingClient
+            .getSimilarSongs2(song.id, count)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.similarSongs2 != null) {
+                        instantMix.setValue(response.body()!!.subsonicResponse.similarSongs2!!.songs)
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                    instantMix.setValue(null)
+                }
+            })
+
+        return instantMix
+    }
+
+    fun getRandomSample(number: Int, fromYear: Int?, toYear: Int?): MutableLiveData<List<Child>> {
+        val randomSongsSample = MutableLiveData<List<Child>>()
+
+        App.getSubsonicClientInstance(false)
+            .albumSongListClient
+            .getRandomSongs(number, fromYear, toYear)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    val songs: MutableList<Child> = ArrayList()
+
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.randomSongs != null && response.body()!!.subsonicResponse.randomSongs!!.songs != null) {
+                        songs.addAll(response.body()!!.subsonicResponse.randomSongs!!.songs!!)
+                    }
+
+                    randomSongsSample.value = songs
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+
+        return randomSongsSample
+    }
+
+    fun scrobble(id: String?, submission: Boolean) {
+        App.getSubsonicClientInstance(false)
+            .mediaAnnotationClient
+            .scrobble(id, submission)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+    }
+
+    fun setRating(id: String?, rating: Int) {
+        App.getSubsonicClientInstance(false)
+            .mediaAnnotationClient
+            .setRating(id, rating)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+    }
+
+    fun getSongsByGenre(id: String?, page: Int): MutableLiveData<List<Child>?> {
+        val songsByGenre = MutableLiveData<List<Child>?>()
+
+        App.getSubsonicClientInstance(false)
+            .albumSongListClient
+            .getSongsByGenre(id, 100, 100 * page)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.songsByGenre != null) {
+                        songsByGenre.value = response.body()!!.subsonicResponse.songsByGenre!!.songs
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+
+        return songsByGenre
+    }
+
+    fun getSongsByGenres(genresId: java.util.ArrayList<String?>): MutableLiveData<List<Child>> {
+        val songsByGenre = MutableLiveData<List<Child>>()
+
+        for (id in genresId) App.getSubsonicClientInstance(false)
+            .albumSongListClient
+            .getSongsByGenre(id, 500, 0)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    val songs: MutableList<Child> = java.util.ArrayList()
+
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.songsByGenre != null) {
+                        songs.addAll(response.body()!!.subsonicResponse.songsByGenre!!.songs!!)
+                    }
+
+                    songsByGenre.value = songs
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+
+        return songsByGenre
+    }
+
+    fun getSong(id: String?): MutableLiveData<Child?> {
+        val song = MutableLiveData<Child?>()
+
+        App.getSubsonicClientInstance(false)
+            .browsingClient
+            .getSong(id)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    if (response.isSuccessful && response.body() != null) {
+                        song.value = response.body()!!.subsonicResponse.song
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+
+        return song
+    }
+
+    fun getSongLyrics(song: Child): MutableLiveData<String?> {
+        val lyrics = MutableLiveData<String?>(null)
+
+        App.getSubsonicClientInstance(false)
+            .mediaRetrievalClient
+            .getLyrics(song.artist, song.title)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>,
+                ) {
+                    if (response.isSuccessful && response.body() != null && response.body()!!.subsonicResponse.lyrics != null) {
+                        lyrics.setValue(response.body()!!.subsonicResponse.lyrics!!.value)
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                }
+            })
+
+        return lyrics
+    }
 }

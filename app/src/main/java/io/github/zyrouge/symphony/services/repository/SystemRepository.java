@@ -53,7 +53,7 @@ public class SystemRepository {
         App.getSubsonicClientInstance(false)
                 .getSystemClient()
                 .ping()
-                .enqueue(new Callback<ApiResponse>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {

@@ -9,6 +9,7 @@ import android.provider.MediaStore.Audio.AudioColumns
 import androidx.compose.runtime.Immutable
 import io.github.zyrouge.symphony.Symphony
 import io.github.zyrouge.symphony.services.database.SongCache
+import io.github.zyrouge.symphony.services.subsonic.models.Child
 import io.github.zyrouge.symphony.utils.CursorShorty
 import java.math.RoundingMode
 import kotlin.io.path.Path
@@ -139,14 +140,11 @@ data class Song(
     val filename = Path(path).fileName.toString()
     val uri: Uri get() = buildUri(id)
 
+    fun getSong(symphony: Symphony) = symphony.groove.song.getStarredSongs(true, 10)
+
     //异步请求图片
     fun createArtworkImageRequest(symphony: Symphony) =
         symphony.groove.song.createArtworkImageRequest(id)
-
-
-    fun getImageByUrl(symphony: Symphony) {
-
-    }
 
     fun createTest(symphony: Symphony) =
         symphony.groove.song.getImageByUrl(id)

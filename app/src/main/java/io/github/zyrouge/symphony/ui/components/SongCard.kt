@@ -87,6 +87,10 @@ fun SongCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 leading()
                 Box {
+//                    for (child in song.getSong(context.symphony)) {
+//                        println("fuck:$child")
+//                    }
+
                     AsyncImage(
                         song.createTest(context.symphony).build().data,
                         null,

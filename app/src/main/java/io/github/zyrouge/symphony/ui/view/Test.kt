@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import io.github.zyrouge.symphony.App
 import io.github.zyrouge.symphony.services.login.Login
 import io.github.zyrouge.symphony.ui.helpers.ViewContext
+import java.util.Locale
 
 @Composable
 fun Fuck(context: ViewContext) {
@@ -30,11 +31,6 @@ fun JsutKiding(context: ViewContext) {
     Scaffold(content = { contentPadding ->
         EditTextCom(Modifier.padding(contentPadding), context)
     })
-
-//    val subsonicClientInstance = App.getSubsonicClientInstance(false)
-//    Log.d("Lee2", "JsutKiding: $subsonicClientInstance")
-
-
 }
 
 @SuppressLint("CommitPrefEdits")
@@ -51,6 +47,10 @@ fun EditTextCom(modifier: Modifier, context: ViewContext) {
     }
 
     Column(modifier = Modifier.padding(50.dp)) {
+
+        val locale = context.activity.resources.configuration.locale
+        Text(text = "Hello, $locale")
+        
         TextField(
             value = url,
             onValueChange = { url = it },
@@ -72,11 +72,11 @@ fun EditTextCom(modifier: Modifier, context: ViewContext) {
 
     if (url.isNotBlank() && user.isNotBlank() && pswd.isNotBlank()) {
         Log.d("Lee3", "EditTextCom: url:$url, user:$user, pswd:$pswd ")
-        App.getInstance().preferences.edit().putString("server", "http://192.168.31.3:43962/").apply()
+        App.getInstance().preferences.edit().putString("server", "https://music.15731573.xyz/").apply()
         App.getInstance().preferences.edit().putString("user", "codefish").apply()
         App.getInstance().preferences.edit().putString("password", "10bsyr1000lblx@Zxj").apply()
 
-        val login = Login(context)
+        val login = Login()
         login.login()
 
 

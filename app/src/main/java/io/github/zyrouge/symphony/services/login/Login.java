@@ -1,41 +1,17 @@
 package io.github.zyrouge.symphony.services.login;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import android.content.ComponentName;
-import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import androidx.core.view.ViewCompat;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.SnapHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.github.zyrouge.symphony.App;
 import io.github.zyrouge.symphony.services.interfaces.SystemCallback;
 import io.github.zyrouge.symphony.services.repository.SystemRepository;
-import io.github.zyrouge.symphony.ui.helpers.ViewContext;
 import io.github.zyrouge.symphony.utils.Preferences;
 
 public class Login {
 
-    private ViewContext viewContext;
-
-    public Login(ViewContext viewContext) {
-        this.viewContext = viewContext;
-    }
-
     public void login() {
         String serverId = "codefish";
-        String server = "http://192.168.31.3:43962";
+        String server = "https://music.15731573.xyz";
         String user = "codefish";
         String password = "10bsyr1000lblx@Zxj";
         saveServerPreference(serverId, server, user, password, false);
@@ -44,7 +20,6 @@ public class Login {
             @Override
             public void onError(Exception exception) {
                 resetServerPreference();
-                Toast.makeText(viewContext.getActivity(), exception.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d("Lee4", "onError: 登录失败:"+exception);
             }
 

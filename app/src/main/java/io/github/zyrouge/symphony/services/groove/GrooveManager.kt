@@ -1,8 +1,12 @@
 package io.github.zyrouge.symphony.services.groove
 
+import androidx.lifecycle.LiveData
 import io.github.zyrouge.symphony.Symphony
 import io.github.zyrouge.symphony.SymphonyHooks
 import io.github.zyrouge.symphony.services.PermissionEvents
+import io.github.zyrouge.symphony.services.repository.SystemRepository
+import io.github.zyrouge.symphony.services.subsonic.models.OpenSubsonicExtension
+import io.github.zyrouge.symphony.services.subsonic.models.SubsonicResponse
 import io.github.zyrouge.symphony.utils.Eventer
 import io.github.zyrouge.symphony.utils.dispatch
 import kotlinx.coroutines.CompletableDeferred
@@ -25,6 +29,8 @@ class GrooveManager(private val symphony: Symphony) : SymphonyHooks {
     //协程作用域
     val coroutineScope = CoroutineScope(Dispatchers.Default)
     var readyDeferred = CompletableDeferred<Boolean>()
+
+    val systemRepository = SystemRepository()
     //音乐库
     val mediaStore = MediaStoreExposer(symphony)
     //音乐信息
@@ -37,6 +43,7 @@ class GrooveManager(private val symphony: Symphony) : SymphonyHooks {
     val playlist = PlaylistRepository(symphony)
 
     init {
+//        systemRepository.ping()
         symphony.permission.onUpdate.subscribe {
             when (it) {
                 PermissionEvents.MEDIA_PERMISSION_GRANTED -> coroutineScope.launch {
@@ -44,6 +51,14 @@ class GrooveManager(private val symphony: Symphony) : SymphonyHooks {
                 }
             }
         }
+    }
+
+    fun ping(): LiveData<SubsonicResponse> {
+        return systemRepository.ping()
+    }
+
+    fun getOpenSubsonicExtensions(): LiveData<List<OpenSubsonicExtension>> {
+        return systemRepository.openSubsonicExtensions
     }
 
     internal fun onMediaStoreUpdate(value: Boolean) {

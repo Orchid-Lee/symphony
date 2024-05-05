@@ -104,62 +104,62 @@ enum class HomePages(
     val selectedIcon: @Composable () -> ImageVector,
     val unselectedIcon: @Composable () -> ImageVector,
 ) {
-    ForYou(
-        label = { it.symphony.t.ForYou },
-        selectedIcon = { Icons.Filled.Face },
-        unselectedIcon = { Icons.Outlined.Face }
-    ),
+//    ForYou(
+//        label = { it.symphony.t.ForYou },
+//        selectedIcon = { Icons.Filled.Face },
+//        unselectedIcon = { Icons.Outlined.Face }
+//    );
     Songs(
         kind = GrooveKinds.SONG,
         label = { it.symphony.t.Songs },
         selectedIcon = { Icons.Filled.MusicNote },
         unselectedIcon = { Icons.Outlined.MusicNote }
-    ),
-    Artists(
-        kind = GrooveKinds.ARTIST,
-        label = { it.symphony.t.Artists },
-        selectedIcon = { Icons.Filled.Group },
-        unselectedIcon = { Icons.Outlined.Group }
-    ),
-    Albums(
-        kind = GrooveKinds.ALBUM,
-        label = { it.symphony.t.Albums },
-        selectedIcon = { Icons.Filled.Album },
-        unselectedIcon = { Icons.Outlined.Album }
-    ),
-    AlbumArtists(
-        kind = GrooveKinds.ALBUM_ARTIST,
-        label = { it.symphony.t.AlbumArtists },
-        selectedIcon = { Icons.Filled.SupervisorAccount },
-        unselectedIcon = { Icons.Outlined.SupervisorAccount }
-    ),
-    Genres(
-        kind = GrooveKinds.GENRE,
-        label = { it.symphony.t.Genres },
-        selectedIcon = { Icons.Filled.Tune },
-        unselectedIcon = { Icons.Outlined.Tune }
-    ),
-    Playlists(
-        kind = GrooveKinds.PLAYLIST,
-        label = { it.symphony.t.Playlists },
-        selectedIcon = { Icons.AutoMirrored.Filled.QueueMusic },
-        unselectedIcon = { Icons.AutoMirrored.Outlined.QueueMusic }
-    ),
-    Browser(
-        label = { it.symphony.t.Browser },
-        selectedIcon = { Icons.Filled.Folder },
-        unselectedIcon = { Icons.Outlined.Folder }
-    ),
-    Folders(
-        label = { it.symphony.t.Folders },
-        selectedIcon = { Icons.Filled.FolderOpen },
-        unselectedIcon = { Icons.Outlined.FolderOpen }
-    ),
-    Tree(
-        label = { it.symphony.t.Tree },
-        selectedIcon = { Icons.Filled.AccountTree },
-        unselectedIcon = { Icons.Outlined.AccountTree }
     );
+//    Artists(
+//        kind = GrooveKinds.ARTIST,
+//        label = { it.symphony.t.Artists },
+//        selectedIcon = { Icons.Filled.Group },
+//        unselectedIcon = { Icons.Outlined.Group }
+//    ),
+//    Albums(
+//        kind = GrooveKinds.ALBUM,
+//        label = { it.symphony.t.Albums },
+//        selectedIcon = { Icons.Filled.Album },
+//        unselectedIcon = { Icons.Outlined.Album }
+//    ),
+//    AlbumArtists(
+//        kind = GrooveKinds.ALBUM_ARTIST,
+//        label = { it.symphony.t.AlbumArtists },
+//        selectedIcon = { Icons.Filled.SupervisorAccount },
+//        unselectedIcon = { Icons.Outlined.SupervisorAccount }
+//    ),
+//    Genres(
+//        kind = GrooveKinds.GENRE,
+//        label = { it.symphony.t.Genres },
+//        selectedIcon = { Icons.Filled.Tune },
+//        unselectedIcon = { Icons.Outlined.Tune }
+//    ),
+//    Playlists(
+//        kind = GrooveKinds.PLAYLIST,
+//        label = { it.symphony.t.Playlists },
+//        selectedIcon = { Icons.AutoMirrored.Filled.QueueMusic },
+//        unselectedIcon = { Icons.AutoMirrored.Outlined.QueueMusic }
+//    ),
+//    Browser(
+//        label = { it.symphony.t.Browser },
+//        selectedIcon = { Icons.Filled.Folder },
+//        unselectedIcon = { Icons.Outlined.Folder }
+//    ),
+//    Folders(
+//        label = { it.symphony.t.Folders },
+//        selectedIcon = { Icons.Filled.FolderOpen },
+//        unselectedIcon = { Icons.Outlined.FolderOpen }
+//    ),
+//    Tree(
+//        label = { it.symphony.t.Tree },
+//        selectedIcon = { Icons.Filled.AccountTree },
+//        unselectedIcon = { Icons.Outlined.AccountTree }
+//    );
 }
 
 enum class HomePageBottomBarLabelVisibility {
@@ -171,17 +171,24 @@ enum class HomePageBottomBarLabelVisibility {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView(context: ViewContext) {
-    //协程作用域
+    //Initializes a coroutine scope for launching asynchronous tasks.
     val coroutineScope = rememberCoroutineScope()
+    //Collects the state of the readIntroductoryMessage setting from the context.symphony.settings object.
     val readIntroductoryMessage by context.symphony.settings.readIntroductoryMessage.collectAsState()
     val tabs by context.symphony.settings.homeTabs.collectAsState()
     val labelVisibility by context.symphony.settings.homePageBottomBarLabelVisibility.collectAsState()
     val currentTab by context.symphony.settings.homeLastTab.collectAsState()
+    //A mutable state variable that tracks whether to show a dropdown menu with options.
     var showOptionsDropdown by remember { mutableStateOf(false) }
+    //A mutable state variable that tracks whether to show a bottom sheet with a list of tabs.
     var showTabsSheet by remember { mutableStateOf(false) }
 
+    /**
+     * The code uses a Scaffold component to provide a basic layout structure for the home screen, including a top bar, content area, and bottom bar
+     */
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        //The top bar includes a search icon, a title that changes based on the current tab, and a three-dot menu with options for rescanning, opening settings, and navigating to a test screen.
         topBar = {
             //顶部工具栏
             CenterAlignedTopAppBar(
@@ -271,7 +278,7 @@ fun HomeView(context: ViewContext) {
                                     },
                                     onClick = {
                                         showOptionsDropdown = false
-                                        context.navController.navigate(Routes.Test)
+                                        context.navController.navigate(Routes.Login)
                                     }
                                 )
                             }
@@ -283,7 +290,7 @@ fun HomeView(context: ViewContext) {
                 }
             )
         },
-        //中间Pager
+        //The content area displays different views based on the current tab, such as ForYouView, SongsView, AlbumsView, etc.
         content = { contentPadding ->
             AnimatedContent(
                 label = "home-content",
@@ -297,25 +304,27 @@ fun HomeView(context: ViewContext) {
                 },
             ) { page ->
                 when (page) {
-                    HomePages.ForYou -> ForYouView(context)
                     HomePages.Songs -> SongsView(context)
-                    HomePages.Albums -> AlbumsView(context)
-                    HomePages.Artists -> ArtistsView(context)
-                    HomePages.AlbumArtists -> AlbumArtistsView(context)
-                    HomePages.Genres -> GenresView(context)
-                    //文件浏览
-                    HomePages.Browser -> BrowserView(context)
-                    HomePages.Folders -> FoldersView(context)
-                    HomePages.Playlists -> PlaylistsView(context)
-                    HomePages.Tree -> TreeView(context)
+//                    HomePages.ForYou -> ForYouView(context)
+//                    HomePages.Albums -> AlbumsView(context)
+//                    HomePages.Artists -> ArtistsView(context)
+//                    HomePages.AlbumArtists -> AlbumArtistsView(context)
+//                    HomePages.Genres -> GenresView(context)
+//                    //文件浏览
+//                    HomePages.Browser -> BrowserView(context)
+//                    HomePages.Folders -> FoldersView(context)
+//                    HomePages.Playlists -> PlaylistsView(context)
+//                    HomePages.Tree -> TreeView(context)
                 }
             }
         },
+        //The bottom bar consists of a NowPlayingBottomBar and a NavigationBar
         bottomBar = {
             Column {
                 //正在播放底栏
                 NowPlayingBottomBar(context, false)
-                //底部导航按钮
+                //The NavigationBar displays a list of tabs based on the tabs state.
+                //The user can tap on a tab to switch to that tab and close the bottom sheet.
                 NavigationBar(
                     modifier = Modifier
                         .pointerInput(Unit) {
@@ -375,7 +384,8 @@ fun HomeView(context: ViewContext) {
             }
         }
     )
-
+    //If showTabsSheet is true, a bottom sheet appears with a grid of tabs.
+    //The user can tap on a tab to switch to that tab and close the bottom sheet.
     if (showTabsSheet) {
         val sheetState = rememberModalBottomSheetState()
         val orderedTabs = remember {
@@ -438,7 +448,8 @@ fun HomeView(context: ViewContext) {
             Spacer(modifier = Modifier.height(12.dp))
         }
     }
-
+    //If the readIntroductoryMessage state is false, an IntroductoryDialog is displayed.
+    //The user can dismiss the dialog by clicking on a button, which sets the readIntroductoryMessage state to true.
     if (!readIntroductoryMessage) {
         IntroductoryDialog(
             context,

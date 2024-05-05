@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
+    implementation(libs.media3.common)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.room.runtime)
     // Kotlin
